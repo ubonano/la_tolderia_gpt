@@ -21,9 +21,12 @@ class AuthRepository {
   Future<User?> signUp(String email, String password) async {
     try {
       _logger.info('Signing up with email: $email');
+
       UserCredential userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
+
       _logger.info('Sign up successful');
+
       return userCredential.user;
     } catch (e) {
       _logger.warning('Sign up failed: $e');
@@ -34,9 +37,12 @@ class AuthRepository {
   Future<User?> signIn(String email, String password) async {
     try {
       _logger.info('Signing in with email: $email');
+
       UserCredential userCredential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
+
       _logger.info('Sign in successful');
+
       return userCredential.user;
     } catch (e) {
       _logger.warning('Sign in failed: $e');
@@ -47,7 +53,9 @@ class AuthRepository {
   Future<void> signOut() async {
     try {
       _logger.info('Signing out');
+
       await _firebaseAuth.signOut();
+
       _logger.info('Sign out successful');
     } catch (e) {
       _logger.warning('Sign out failed: $e');
