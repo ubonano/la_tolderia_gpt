@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-
 import '../../../utils/app_navigate.dart';
 import '../../../utils/app_snack_bar.dart';
 import '../../../utils/get_it_setup.dart';
-import '../../../widgets/app_form.dart';
-import '../../../widgets/app_form_fields.dart';
 import '../../../widgets/app_buttons.dart';
+import '../../../widgets/app_form_fields.dart';
 import '../../branch/branch.dart';
 import '../employee.dart';
 import '../employee_service.dart';
@@ -58,13 +56,22 @@ class _EmployeeFormState extends State<EmployeeForm> {
 
   @override
   Widget build(BuildContext context) {
-    return AppForm(
-      formKey: _formKey,
+    return Form(
+      key: _formKey,
       child: Column(
         children: [
-          AppFormFields.idNumber(_idController),
-          AppFormFields.name(_firstNameController),
-          AppFormFields.lastName(_lastNameController),
+          AppFormFields.idNumber(
+            _idController,
+            onFieldSubmitted: (_) => _onSubmit(),
+          ),
+          AppFormFields.name(
+            _firstNameController,
+            onFieldSubmitted: (_) => _onSubmit(),
+          ),
+          AppFormFields.lastName(
+            _lastNameController,
+            onFieldSubmitted: (_) => _onSubmit(),
+          ),
           AppFormFields.branchDropdown(
             branch: _branch,
             onChanged: (Branch? newValue) {
@@ -72,30 +79,52 @@ class _EmployeeFormState extends State<EmployeeForm> {
               setState(() {});
             },
           ),
-          AppFormFields.phone(_phoneController),
-          AppFormFields.email(_emailController),
-          AppFormFields.address(_addressController),
+          AppFormFields.phone(
+            _phoneController,
+            onFieldSubmitted: (_) => _onSubmit(),
+          ),
+          AppFormFields.email(
+            _emailController,
+            onFieldSubmitted: (_) => _onSubmit(),
+          ),
+          AppFormFields.address(
+            _addressController,
+            onFieldSubmitted: (_) => _onSubmit(),
+          ),
           AppFormFields.isActiveSwitch(_isActive, (value) {
             _isActive = value;
             setState(() {});
           }),
+          const SizedBox(height: 8),
+          AppButtons.saveButton(onPressed: _onSubmit),
         ],
       ),
-      onSubmit: () => widget.onSubmit(
-        Employee(
-          id: widget.employee != null ? widget.employee!.id : '',
-          identificationNumber: _idController.text,
-          firstName: _firstNameController.text,
-          lastName: _lastNameController.text,
-          branchName: _branch!.name,
-          branchId: _branch!.id,
-          phone: _phoneController.text,
-          email: _emailController.text,
-          address: _addressController.text,
-          isActive: _isActive,
-        ),
-      ),
     );
+  }
+
+  void _onSubmit() {
+    if (_formKey.currentState!.validate()) {
+      try {
+        widget.onSubmit(
+          Employee(
+            id: widget.employee != null ? widget.employee!.id : '',
+            identificationNumber: _idController.text,
+            firstName: _firstNameController.text,
+            lastName: _lastNameController.text,
+            branchName: _branch!.name,
+            branchId: _branch!.id,
+            phone: _phoneController.text,
+            email: _emailController.text,
+            address: _addressController.text,
+            isActive: _isActive,
+          ),
+        );
+
+        AppNavigate.back(context);
+      } on Exception catch (e) {
+        AppSnackBar.showSnackBar(context, 'Error: $e');
+      }
+    }
   }
 
   @override

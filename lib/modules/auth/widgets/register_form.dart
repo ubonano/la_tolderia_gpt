@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../widgets/app_form.dart';
+import '../../../utils/app_navigate.dart';
+import '../../../utils/app_snack_bar.dart';
+import '../../../widgets/app_buttons.dart';
 import '../../../widgets/app_form_fields.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -21,22 +23,41 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    return AppForm(
-      formKey: _formKey,
-      backOnSubmit: false,
-      onSubmit: () =>
-          widget.onSubmit(_emailController.text, _passwordController.text),
-      child: Column(
-        children: [
-          AppFormFields.email(_emailController),
-          AppFormFields.password(_passwordController),
-          AppFormFields.passwordConfirmation(
-            _passwordConfirmationController,
-            _passwordController,
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            AppFormFields.email(
+              _emailController,
+              onFieldSubmitted: (_) => _onSubmit(),
+            ),
+            AppFormFields.password(
+              _passwordController,
+              onFieldSubmitted: (_) => _onSubmit(),
+            ),
+            AppFormFields.passwordConfirmation(
+              _passwordConfirmationController,
+              _passwordController,
+              onFieldSubmitted: (_) => _onSubmit(),
+            ),
+            const SizedBox(height: 8),
+            AppButtons.registerButton(onPressed: _onSubmit),
+          ],
+        ),
       ),
     );
+  }
+
+  void _onSubmit() {
+    if (_formKey.currentState!.validate()) {
+      try {
+        widget.onSubmit(_emailController.text, _passwordController.text);
+      } on Exception catch (e) {
+        AppSnackBar.showSnackBar(context, 'Error: $e');
+      }
+    }
   }
 
   @override

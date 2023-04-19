@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../widgets/app_form.dart';
+import '../../../utils/app_navigate.dart';
+import '../../../utils/app_snack_bar.dart';
+import '../../../widgets/app_buttons.dart';
 import '../../../widgets/app_form_fields.dart';
 import '../branch.dart';
 
@@ -26,20 +28,39 @@ class _BranchFormState extends State<BranchForm> {
 
   @override
   Widget build(BuildContext context) {
-    return AppForm(
-      formKey: _formKey,
-      child: Column(
-        children: [
-          AppFormFields.name(_nameController),
-        ],
-      ),
-      onSubmit: () => widget.onSubmit(
-        Branch(
-          id: widget.branch?.id ?? '',
-          name: _nameController.text,
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            AppFormFields.name(
+              _nameController,
+              onFieldSubmitted: (_) => _onSubmit(),
+            ),
+            const SizedBox(height: 8),
+            AppButtons.saveButton(onPressed: _onSubmit),
+          ],
         ),
       ),
     );
+  }
+
+  void _onSubmit() {
+    if (_formKey.currentState!.validate()) {
+      try {
+        widget.onSubmit(
+          Branch(
+            id: widget.branch?.id ?? '',
+            name: _nameController.text,
+          ),
+        );
+
+        AppNavigate.back(context);
+      } on Exception catch (e) {
+        AppSnackBar.showSnackBar(context, 'Error: $e');
+      }
+    }
   }
 
   @override

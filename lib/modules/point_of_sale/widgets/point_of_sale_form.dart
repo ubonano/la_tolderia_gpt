@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../widgets/app_form.dart';
+import '../../../utils/app_navigate.dart';
+import '../../../utils/app_snack_bar.dart';
+import '../../../widgets/app_buttons.dart';
 import '../../../widgets/app_form_fields.dart';
 import '../../branch/branch.dart';
 import '../point_of_sale.dart';
@@ -39,11 +41,14 @@ class _PointOfSaleFormState extends State<PointOfSaleForm> {
 
   @override
   Widget build(BuildContext context) {
-    return AppForm(
-      formKey: _formKey,
+    return Form(
+      key: _formKey,
       child: Column(
         children: [
-          AppFormFields.name(_nameController),
+          AppFormFields.name(
+            _nameController,
+            onFieldSubmitted: (_) => _onSubmit(),
+          ),
           AppFormFields.branchDropdown(
             branch: _branch,
             onChanged: (Branch? newValue) {
@@ -52,17 +57,30 @@ class _PointOfSaleFormState extends State<PointOfSaleForm> {
               });
             },
           ),
+          const SizedBox(height: 8),
+          AppButtons.saveButton(onPressed: _onSubmit),
         ],
       ),
-      onSubmit: () => widget.onSubmit(
-        PointOfSale(
-          id: widget.pointOfSale?.id ?? '',
-          name: _nameController.text,
-          branchId: _branch!.id,
-          branchName: _branch!.name,
-        ),
-      ),
     );
+  }
+
+  void _onSubmit() {
+    if (_formKey.currentState!.validate()) {
+      try {
+        widget.onSubmit(
+          PointOfSale(
+            id: widget.pointOfSale?.id ?? '',
+            name: _nameController.text,
+            branchId: _branch!.id,
+            branchName: _branch!.name,
+          ),
+        );
+
+        AppNavigate.back(context);
+      } on Exception catch (e) {
+        AppSnackBar.showSnackBar(context, 'Error: $e');
+      }
+    }
   }
 
   @override
