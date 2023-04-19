@@ -20,6 +20,7 @@ class EmployeeService {
 
   void _loadEmployees() async {
     _logger.info('Loading employees');
+
     _employeeRepository.getEmployees().listen((employees) {
       _employeesSubject.add(employees);
       _logger.info('Employees loaded');
@@ -31,6 +32,7 @@ class EmployeeService {
 
   Future<void> addEmployee(Employee employee) {
     _logger.info('Adding employee');
+
     return _employeeRepository.addEmployee(employee).then((_) {
       _logger.info('Employee added');
     }).catchError((e) {
@@ -41,6 +43,7 @@ class EmployeeService {
 
   Future<void> updateEmployee(Employee employee) {
     _logger.info('Updating employee');
+
     return _employeeRepository.updateEmployee(employee).then((_) {
       _logger.info('Employee updated');
     }).catchError((e) {
@@ -51,6 +54,7 @@ class EmployeeService {
 
   Future<void> deleteEmployee(String employeeId) {
     _logger.info('Deleting employee');
+
     return _employeeRepository.deleteEmployee(employeeId).then((_) {
       _logger.info('Employee deleted');
     }).catchError((e) {

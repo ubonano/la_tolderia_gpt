@@ -19,8 +19,10 @@ class BranchService {
 
   Future<void> _loadBranches() async {
     _logger.info('Loading branches');
+
     _branchRepository.getBranches().listen((branches) {
       _branchesSubject.add(branches);
+
       _logger.info('Loaded branches');
     }, onError: (e, stackTrace) {
       _logger.severe('Failed to load branches', e, stackTrace);
@@ -32,9 +34,11 @@ class BranchService {
   }
 
   Future<void> addBranch(Branch branch) async {
-    _logger.info('Adding branch in service');
     try {
+      _logger.info('Adding branch in service');
+
       await _branchRepository.addBranch(branch);
+
       _logger.info('Added branch in service');
     } catch (e, stackTrace) {
       _logger.severe('Failed to add branch in service', e, stackTrace);
@@ -43,9 +47,11 @@ class BranchService {
   }
 
   Future<void> updateBranch(Branch branch) async {
-    _logger.info('Updating branch in service');
     try {
+      _logger.info('Updating branch in service');
+
       await _branchRepository.updateBranch(branch);
+
       _logger.info('Updated branch in service');
     } catch (e, stackTrace) {
       _logger.severe('Failed to update branch in service', e, stackTrace);
@@ -54,11 +60,13 @@ class BranchService {
   }
 
   Future<void> deleteBranch(String branchId) async {
-    _logger.info('Deleting branch in service');
     try {
+      _logger.info('Deleting branch in service');
+
       await _branchRepository.deleteBranch(branchId);
+
       _logger.info('Deleted branch in service');
-    } catch (e, stackTrace) { 
+    } catch (e, stackTrace) {
       _logger.severe('Failed to delete branch in service', e, stackTrace);
       rethrow;
     }

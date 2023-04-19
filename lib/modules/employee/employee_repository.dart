@@ -47,6 +47,7 @@ class EmployeeRepository {
 
   Future<void> deleteEmployee(String employeeId) {
     _logger.info('Deleting employee');
+
     return _employeeCollection.doc(employeeId).delete().catchError((e) {
       _logger.warning('Error deleting employee: $e');
       throw e;

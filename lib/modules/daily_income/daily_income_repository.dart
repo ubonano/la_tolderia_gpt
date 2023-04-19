@@ -16,6 +16,7 @@ class DailyIncomeRepository {
 
   Stream<List<DailyIncome>> getDailyIncomes() {
     _logger.info('Getting daily incomes');
+
     return _dailyIncomeCollection
         .orderBy('date', descending: false)
         .snapshots()
@@ -31,6 +32,7 @@ class DailyIncomeRepository {
   Future<bool> dailyIncomeExists(DateTime date) async {
     try {
       _logger.info('Checking if daily income exists for date: $date');
+
       final querySnapshot = await _dailyIncomeCollection
           .where('date', isEqualTo: Timestamp.fromDate(date))
           .get();
@@ -45,7 +47,9 @@ class DailyIncomeRepository {
   Future<void> addDailyIncome(DailyIncome dailyIncome) async {
     try {
       _logger.info('Adding daily income');
+
       await _dailyIncomeCollection.add(dailyIncome.toMap());
+
       _logger.info('Daily income added');
     } catch (e) {
       _logger.warning('Error adding daily income: $e');
@@ -56,9 +60,11 @@ class DailyIncomeRepository {
   Future<void> updateDailyIncome(DailyIncome dailyIncome) async {
     try {
       _logger.info('Updating daily income');
+
       await _dailyIncomeCollection
           .doc(dailyIncome.id)
           .update(dailyIncome.toMap());
+
       _logger.info('Daily income updated');
     } catch (e) {
       _logger.warning('Error updating daily income: $e');
@@ -69,7 +75,9 @@ class DailyIncomeRepository {
   Future<void> deleteDailyIncome(String id) async {
     try {
       _logger.info('Deleting daily income');
+
       await _dailyIncomeCollection.doc(id).delete();
+
       _logger.info('Daily income deleted');
     } catch (e) {
       _logger.warning('Error deleting daily income: $e');
