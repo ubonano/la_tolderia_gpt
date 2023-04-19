@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../utils/app_navigate.dart';
 import '../../../utils/app_snack_bar.dart';
 import '../../../widgets/app_buttons.dart';
 import '../../../widgets/app_form_fields.dart';
