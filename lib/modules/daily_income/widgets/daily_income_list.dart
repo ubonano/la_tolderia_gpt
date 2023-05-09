@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../utils/app_navigate.dart';
 import '../../../utils/get_it_setup.dart';
-import '../../../widgets/app_buttons.dart';
+import '../../../widgets/app_3d_button.dart';
 import '../../../widgets/app_list_tile.dart';
 import '../../../widgets/app_stream_builder.dart';
 import '../daily_income.dart';
